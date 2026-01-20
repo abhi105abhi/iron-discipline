@@ -1,56 +1,55 @@
 import { useEffect, useState } from "react"
 import { initData } from "../utils/storage"
 import { calculateDisciplineScore } from "../utils/discipline"
+import ProgressRing from "../components/ProgressRing"
+import Heatmap from "../components/Heatmap"
+import WeeklyReport from "../components/WeeklyReport"
 
 export default function Stats() {
   const [data, setData] = useState(null)
+  const [animatedScore, setAnimatedScore] = useState(0)
 
   useEffect(() => {
-    setData(initData())
+    const d = initData()
+    setData(d)
+
+    const target = calculateDisciplineScore(d.habits)
+    let i = 0
+    const timer = setInterval(() => {
+      i++
+      setAnimatedScore(i)
+      if (i >= target) clearInterval(timer)
+    }, 20)
   }, [])
 
   if (!data) return null
 
-  const daysUsed = Math.floor(
+  const daysUsed =
     (Date.now() - data.startDate) / (1000 * 60 * 60 * 24)
-  )
-
-  const accessLeft = data.accessDays - daysUsed
-  const locked = accessLeft <= 0
-
-  const score = calculateDisciplineScore(data.habits)
+  const locked = daysUsed > data.accessDays
 
   return (
     <div className="container">
       <h1>STATS</h1>
 
-      <div className="stats-grid">
-        <div className="stat-box">
-          <h2>{score}%</h2>
-          <p>Discipline Score</p>
-        </div>
-
-        <div className="stat-box">
-          <h2>{data.habits.length}</h2>
-          <p>Total Habits</p>
-        </div>
-
-        <div className="stat-box">
-          <h2>
-            {data.habits.filter(h => h.status === "completed").length}
-          </h2>
-          <p>Completed</p>
-        </div>
+      <div className="center">
+        <ProgressRing value={animatedScore} />
+        <p>Discipline Score</p>
       </div>
+
+      <WeeklyReport habits={data.habits} />
+
+      <h3>Consistency</h3>
+      <Heatmap habits={data.habits} />
 
       {locked && (
         <div className="paywall">
-          <p>Your free access is over.</p>
+          <p>Free access over.</p>
           <a
             href="https://instagram.com/direct/new/?text=I%20want%20to%20purchase%20lifetime%20access%20for%20the%20discipline%20portal"
             target="_blank"
           >
-            Unlock Lifetime Discipline ₹99
+            Unlock Lifetime ₹99
           </a>
         </div>
       )}
