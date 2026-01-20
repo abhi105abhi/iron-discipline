@@ -1,22 +1,25 @@
-import { lastNDays } from "../utils/date"
+export default function Heatmap({ completedDaysAll }) {
+  const days = [];
+  for (let i = 104; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    days.push(date.toISOString().slice(0, 10));
+  }
 
-export default function Heatmap({ habits }) {
-  const days = lastNDays(30)
+  const counts = {};
+  completedDaysAll.forEach(d => {
+    counts[d] = (counts[d] || 0) + 1;
+  });
 
-  const countForDay = (day) =>
-    habits.filter(h => h.completedDays.includes(day)).length
+  const max = Math.max(1, ...Object.values(counts));
 
   return (
     <div className="heatmap">
-      {days.map(d => {
-        const count = countForDay(d)
-        let level = "empty"
-        if (count >= 3) level = "high"
-        else if (count === 2) level = "mid"
-        else if (count === 1) level = "low"
-
-        return <div key={d} className={`heat ${level}`} />
+      {days.map(day => {
+        const count = counts[day] || 0;
+        const intensity = count === 0 ? "" : count < max / 3 ? "low" : count < max * 2 / 3 ? "mid" : "high";
+        return <div key={day} className={`heat ${intensity}`} />;
       })}
     </div>
-  )
+  );
 }
