@@ -1,47 +1,82 @@
 :root {
-  --bg-black: #050505;
-  --card-gray: #121212;
-  --blood-red: #cc0000;
-  --text-white: #e0e0e0;
+  --bg-black: #0a0a0a;
+  --card-dark: #141414;
+  --blood-red: #b30000;
+  --iron-gray: #4a4a4a;
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
 }
 
 body {
   background-color: var(--bg-black);
-  color: var(--text-white);
-  font-family: 'Inter', sans-serif;
-  text-transform: uppercase;
+  color: var(--text-primary);
+  font-family: 'Inter', 'Oswald', sans-serif;
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.auth-container {
+/* Auth & Paywall Layout */
+.auth-container, .paywall-container {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20px;
   text-align: center;
 }
 
 .brand-logo {
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 900;
-  letter-spacing: 5px;
   color: var(--blood-red);
-  margin-bottom: 0;
+  margin: 0;
+  text-shadow: 0 0 15px rgba(179, 0, 0, 0.5);
 }
 
-.login-btn {
+.btn-primary {
   background: transparent;
   border: 2px solid var(--blood-red);
   color: white;
-  padding: 15px 30px;
+  padding: 15px 40px;
+  font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
-  margin-top: 30px;
+  transition: all 0.3s ease;
+  margin-top: 20px;
 }
 
-.login-btn:hover {
+.btn-primary:hover {
   background: var(--blood-red);
-  box-shadow: 0 0 20px var(--blood-red);
+  box-shadow: 0 0 25px var(--blood-red);
 }
+
+/* Dashboard Elements */
+.dashboard-header {
+  padding: 2rem;
+  border-bottom: 1px solid var(--iron-gray);
+}
+
+.habit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 2rem;
+}
+
+.habit-card {
+  background: var(--card-dark);
+  padding: 20px;
+  border-radius: 4px;
+  border-left: 4px solid var(--blood-red);
+}
+
+.loader {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: var(--blood-red);
+  }
