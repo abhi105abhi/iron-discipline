@@ -1,46 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { auth, db } from './firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
-import Auth from './components/Auth'; // Make sure the path is correct
+import React, { useState, useEffect } from 'react';
+import { auth } from './firebase';
+import Auth from './components/Auth';
 import Dashboard from './pages/Dashboard';
+import Stats from './pages/Stats';
+import BottomNav from './components/BottomNav';
 import Paywall from './components/Paywall';
-import './styles.css';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [isExpired, setIsExpired] = useState(false);
+  const [view, setView] = useState('forge');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        const userRef = doc(db, "users", currentUser.uid);
-        const userSnap = await getDoc(userRef);
-        
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          const signupDate = userData.createdAt;
-          const fifteenDaysInMs = 15 * 24 * 60 * 60 * 1000;
-          
-          if (!userData.isPremium && (Date.now() - signupDate > fifteenDaysInMs)) {
-            setIsExpired(true);
-          }
-        }
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
+    const unsubscribe = auth.onAuthStateChanged((u) => {
+      setUser(u);
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  if (loading) return <div className="loader">BUILDING WARRIOR...</div>;
+  if (loading) return <div className="loader">FORGING...</div>;
   if (!user) return <Auth />;
-  if (isExpired) return <Paywall />;
 
-  return <Dashboard user={user} />;
+  return (
+    <>
+      <div className="view-container">
+        {view === 'forge' && <Dashboard user={user} />}
+        {view === 'stats' && <Stats user={user} />}
+        {view === 'profile' && (
+          <div className="profile-view">
+            <h1 className="brand-logo">WARRIOR</h1>
+            <p>{user.displayName}</p>
+            <button onClick={() => auth.signOut()} className="btn-primary">ABANDON MISSIONS (LOGOUT)</button>
+          </div>
+        )}
+      </div>
+      <BottomNav currentView={view} setView={setView} />
+    </>
+  );
 }
 
 export default App;
