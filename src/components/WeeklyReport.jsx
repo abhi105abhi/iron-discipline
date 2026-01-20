@@ -1,25 +1,27 @@
-import { getWeekNumber } from "../utils/date"
+import React from 'react';
+import { getCurrentWeekDates } from '../utils/date';
 
-export default function WeeklyReport({ habits }) {
-  const nowWeek = getWeekNumber(new Date().toISOString())
-
-  let done = 0
-  let total = 0
-
-  habits.forEach(h => {
-    h.completedDays.forEach(d => {
-      if (getWeekNumber(d) === nowWeek) done++
-    })
-    total += 7
-  })
-
-  const pct = total === 0 ? 0 : Math.round((done / total) * 100)
-
+const WeeklyReport = ({ habits }) => {
+  const weekDates = getCurrentWeekDates();
+  
   return (
-    <div className="card">
-      <h3>Weekly Report</h3>
-      <p>{done} actions completed</p>
-      <p>Consistency: {pct}%</p>
+    <div className="weekly-report">
+      <h4>WEEKLY WARRIOR LOG</h4>
+      <div className="week-grid">
+        {weekDates.map(date => {
+          const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'short' });
+          const isDone = habits.some(h => h.completedDays.includes(date));
+          
+          return (
+            <div key={date} className={`week-day ${isDone ? 'done' : ''}`}>
+              <span>{dayName}</span>
+              <div className="status-dot"></div>
+            </div>
+          );
+        })}
+      </div>
     </div>
-  )
-}
+  );
+};
+
+export default WeeklyReport;
