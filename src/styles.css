@@ -134,3 +134,44 @@ input:focus { border-color: var(--blood-red); outline: none; }
 .level-2 { background: #990000; }
 .level-3 { background: #ff0000; box-shadow: 0 0 5px #ff0000; }
   
+
+/* Body ko fix kar taaki browser jaisa scroll na ho */
+body, html {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* Body scroll band */
+  background-color: #000;
+  -webkit-tap-highlight-color: transparent; /* Mobile touch highlight remove */
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollable area sirf content ke liye */
+.dashboard-container, .stats-page {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px; /* Space for Bottom Nav */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Bottom Navigation Bar (Native App Style) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid #222;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  padding-bottom: env(safe-area-inset-bottom); /* iOS support */
+  }
+
