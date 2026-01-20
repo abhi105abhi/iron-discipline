@@ -1,58 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRON CORE | Elite Discipline</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div id="paywall" class="overlay hidden">
-        <div class="paywall-content">
-            <h1>TRIAL EXPIRED</h1>
-            <p>The 15-day elite access has ended. Do you have the discipline to continue?</p>
-            <a href="https://www.instagram.com/direct/t/YOUR_INSTAGRAM_ID?text=I%20want%20to%20purchase%20lifetime%20access%20to%20Iron%20Core" class="buy-btn">GET LIFETIME ACCESS (₹99)</a>
-        </div>
-    </div>
-
-    <nav>
-        <div class="logo">IRON CORE</div>
-        <div id="momentum-badge">MOMENTUM: <span id="momentum-val">0</span>%</div>
-    </nav>
-
-    <main>
-        <section id="quote-area">
-            <p id="daily-quote">"STRENGTH IS THE PRODUCT OF STRUGGLE."</p>
-        </nav>
-
-        <section id="stats-dashboard">
-            <div class="stat-card">
-                <h3>OVERALL PROGRESS</h3>
-                <div class="circular-progress">
-                    <svg viewBox="0 0 36 36" class="circular-chart">
-                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path id="progress-circle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    </svg>
-                    <div id="percentage-text">0%</div>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <h3>CONSISTENCY MATRIX</h3>
-                <div id="matrix-grid"></div>
-            </div>
-        </section>
-
-        <section id="habit-section">
-            <div class="section-header">
-                <h2>ACTIVE MISSIONS</h2>
-                <button id="add-habit-btn">+ NEW MISSION</button>
-            </div>
-            <div id="habit-list"></div>
-        </section>
-    </main>
-
-    <script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Iron Discipline</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Build unbreakable discipline. No excuses." />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
