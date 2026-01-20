@@ -1,7 +1,6 @@
-
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Dashboard from './pages/Dashboard'
-import Stats from './pages/Stats'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Dashboard from "./pages/Dashboard"
+import Stats from "./pages/Stats"
 
 export default function App() {
   return (
