@@ -8,16 +8,29 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'] // Fixes the glob warning
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,jsx}'] // Added jsx to patterns
       },
       manifest: {
-        name: 'Sudhar Ja - Iron Discipline',
+        name: 'SUDHAR JA',
         short_name: 'SudharJa',
         description: 'Forge Your Will.',
         theme_color: '#050505',
         background_color: '#050505',
-        display: 'standalone'
+        display: 'standalone',
+        icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
       }
     })
   ]
 });
+    
