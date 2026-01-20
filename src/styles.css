@@ -80,3 +80,44 @@ body {
   font-weight: bold;
   color: var(--blood-red);
   }
+
+/* Heatmap Styles */
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(53, 1fr);
+  gap: 3px;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+.heatmap-cell {
+  width: 12px;
+  height: 12px;
+  background: #1a1a1a;
+  border-radius: 2px;
+}
+.level-1 { background: #4d0000; }
+.level-2 { background: #990000; }
+.level-3 { background: #cc0000; box-shadow: 0 0 5px #cc0000; }
+
+/* Stats Layout */
+.score-circle {
+  border: 4px solid var(--blood-red);
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+}
+.score-val { font-size: 3rem; font-weight: 900; }
+.score-label { font-size: 0.7rem; color: var(--text-secondary); }
+
+.stats-card {
+  background: var(--card-dark);
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #222;
+  }
+
