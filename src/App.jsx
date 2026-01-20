@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from './firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import Auth from './components/Auth';
+import Auth from './components/Auth'; // Make sure the path is correct
 import Dashboard from './pages/Dashboard';
 import Paywall from './components/Paywall';
 import './styles.css';
@@ -18,25 +18,14 @@ function App() {
         const userRef = doc(db, "users", currentUser.uid);
         const userSnap = await getDoc(userRef);
         
-        let userData;
-        if (!userSnap.exists()) {
-          // New User Setup
-          userData = {
-            name: currentUser.displayName,
-            email: currentUser.email,
-            createdAt: Date.now(),
-            isPremium: false
-          };
-          await setDoc(userRef, userData);
-        } else {
-          userData = userSnap.data();
-        }
-
-        // 15-Day Trial Logic
-        const signupDate = userData.createdAt;
-        const fifteenDaysInMs = 15 * 24 * 60 * 60 * 1000;
-        if (!userData.isPremium && (Date.now() - signupDate > fifteenDaysInMs)) {
-          setIsExpired(true);
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          const signupDate = userData.createdAt;
+          const fifteenDaysInMs = 15 * 24 * 60 * 60 * 1000;
+          
+          if (!userData.isPremium && (Date.now() - signupDate > fifteenDaysInMs)) {
+            setIsExpired(true);
+          }
         }
         setUser(currentUser);
       } else {
@@ -47,7 +36,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  if (loading) return <div className="loader">FORGING YOUR WILL...</div>;
+  if (loading) return <div className="loader">BUILDING WARRIOR...</div>;
   if (!user) return <Auth />;
   if (isExpired) return <Paywall />;
 
