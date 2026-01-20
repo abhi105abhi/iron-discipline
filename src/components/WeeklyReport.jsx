@@ -3,19 +3,19 @@ import { getCurrentWeekDates } from '../utils/date';
 
 const WeeklyReport = ({ habits }) => {
   const weekDates = getCurrentWeekDates();
-  
+
   return (
-    <div className="weekly-report">
-      <h4>WEEKLY WARRIOR LOG</h4>
-      <div className="week-grid">
+    <div className="weekly-warrior-log">
+      <h4 className="section-label">7-Day Battle Log</h4>
+      <div className="week-strip">
         {weekDates.map(date => {
-          const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'short' });
-          const isDone = habits.some(h => h.completedDays.includes(date));
+          const day = new Date(date).toLocaleDateString('en-US', { weekday: 'short' });
+          const wins = habits.filter(h => h.completedDays.includes(date)).length;
           
           return (
-            <div key={date} className={`week-day ${isDone ? 'done' : ''}`}>
-              <span>{dayName}</span>
-              <div className="status-dot"></div>
+            <div key={date} className={`week-day-box ${wins > 0 ? 'victorious' : ''}`}>
+              <span className="day-name">{day}</span>
+              <span className="win-count">{wins}</span>
             </div>
           );
         })}
