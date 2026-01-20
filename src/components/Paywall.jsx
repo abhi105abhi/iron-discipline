@@ -1,40 +1,27 @@
-import { useState } from "react";
-import { initData, saveData } from "../utils/storage";
+import React from 'react';
 
-const UNLOCK_CODE = "IRON99"; // Change this code or provide unique ones to buyers after payment
-
-export default function Paywall() {
-  const [code, setCode] = useState("");
-  const [msg, setMsg] = useState("");
-
-  const handleUnlock = () => {
-    if (code.toUpperCase() === UNLOCK_CODE) {
-      const data = initData();
-      data.lifetimeAccess = true;
-      saveData(data);
-      window.location.reload();
-    } else {
-      setMsg("Invalid code");
-    }
-  };
-
-  const copyMsg = () => {
-    navigator.clipboard.writeText("Hey, I want to purchase lifetime access to Iron Discipline for ₹99");
-    alert("Message copied!");
-  };
+const Paywall = () => {
+  const instagramLink = "https://ig.me/m/your_id?text=I%20want%20to%20purchase%20lifetime%20access%20for%20SUDHAR%20JA";
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "20px", background: "#000" }}>
-      <h1 style={{ fontSize: "48px", letterSpacing: "6px", color: "#dc2626" }}>TRIAL EXPIRED</h1>
-      <p style={{ fontSize: "20px", maxWidth: "600px" }}>Your 15-day trial is over. Unlock lifetime access for just ₹99 — one-time payment, forever.</p>
-      <button onClick={copyMsg}>Copy Purchase Message</button>
-      <a href="https://www.instagram.com/YOUR_INSTAGRAM_USERNAME/" target="_blank" rel="noopener noreferrer">
-        <button style={{ margin: "20px 0" }}>Open Instagram to DM</button>
+    <div className="paywall-container">
+      <div className="lock-icon">🔒</div>
+      <h1 className="brand-logo">TRIAL EXPIRED</h1>
+      <p className="paywall-text">
+        DISCIPLINE IS NOT FREE. YOU'VE USED YOUR 15 DAYS. <br />
+        NOW PROVE YOU'RE SERIOUS ABOUT CHANGE.
+      </p>
+      <div className="price-tag">
+        <span className="old-price">₹499</span>
+        <span className="new-price">₹99</span>
+        <p>LIFETIME ACCESS</p>
+      </div>
+      <a href={instagramLink} target="_blank" rel="noreferrer">
+        <button className="btn-primary">ACTIVATE WARRIOR STATUS</button>
       </a>
-      <p>Already paid? Enter your access code:</p>
-      <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="Access code" />
-      <button onClick={handleUnlock}>Unlock Lifetime</button>
-      <p style={{ color: "red" }}>{msg}</p>
+      <p className="footer-note">DM "LIFETIME ACCESS" TO UPGRADE</p>
     </div>
   );
-}
+};
+
+export default Paywall;
