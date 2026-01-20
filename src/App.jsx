@@ -1,14 +1,46 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Dashboard from "./pages/Dashboard"
-import Stats from "./pages/Stats"
+import React, { useEffect, useState } from 'react';
+import { auth, db } from './firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import Auth from './components/Auth';
+import Dashboard from './pages/Dashboard';
+import Paywall from './components/Paywall';
+import './styles.css';
 
-export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/stats" element={<Stats />} />
-      </Routes>
-    </BrowserRouter>
-  )
+function App() {
+  const [user, setUser] = useState(null);
+  const [isExpired, setIsExpired] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+      if (currentUser) {
+        const userRef = doc(db, "users", currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          const signupDate = userData.createdAt;
+          const fifteenDaysInMs = 15 * 24 * 60 * 60 * 1000;
+          
+          if (!userData.isPremium && (Date.now() - signupDate > fifteenDaysInMs)) {
+            setIsExpired(true);
+          }
+        }
+        setUser(currentUser);
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) return <div className="loader">Forging...</div>;
+
+  if (!user) return <Auth />;
+  if (isExpired) return <Paywall />;
+
+  return <Dashboard user={user} />;
 }
+
+export default App;
