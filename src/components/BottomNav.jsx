@@ -1,13 +1,27 @@
 import React from 'react';
 
-const BottomNav = ({ setView }) => {
+const BottomNav = ({ currentView, setView }) => {
+  const tabs = [
+    { id: 'forge', label: 'THE FORGE', icon: '🔥' },
+    { id: 'stats', label: 'ANALYTICS', icon: '📊' },
+    { id: 'profile', label: 'WARRIOR', icon: '🛡️' }
+  ];
+
   return (
-    <div className="bottom-nav">
-      <button onClick={() => setView('forge')} className="nav-item">🔥 FORGE</button>
-      <button onClick={() => setView('stats')} className="nav-item">📊 STATS</button>
-      <button onClick={() => setView('profile')} className="nav-item">👤 WARRIOR</button>
-    </div>
+    <nav className="bottom-nav">
+      {tabs.map(tab => (
+        <button 
+          key={tab.id}
+          className={`nav-item ${currentView === tab.id ? 'active' : ''}`}
+          onClick={() => setView(tab.id)}
+        >
+          <span style={{fontSize: '20px'}}>{tab.icon}</span>
+          <span>{tab.label}</span>
+        </button>
+      ))}
+    </nav>
   );
 };
 
 export default BottomNav;
+          
