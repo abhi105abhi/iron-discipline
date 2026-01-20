@@ -3,9 +3,8 @@ import { getYearlyDates } from '../utils/date';
 
 const Heatmap = ({ habits }) => {
   const allDates = getYearlyDates();
-  
-  // Saare habits ki completed dates ko ek jagah jama karo
   const completedMap = {};
+
   habits.forEach(h => {
     h.completedDays.forEach(date => {
       completedMap[date] = (completedMap[date] || 0) + 1;
@@ -13,28 +12,35 @@ const Heatmap = ({ habits }) => {
   });
 
   return (
-    <div className="heatmap-container">
-      <h4>IRON CONSISTENCY (365 DAYS)</h4>
+    <div className="heatmap-section">
+      <h4 className="section-label">Consistency Matrix</h4>
       <div className="heatmap-grid">
         {allDates.map(date => {
           const count = completedMap[date] || 0;
-          let intensity = 'level-0';
-          if (count > 0) intensity = 'level-1';
-          if (count > 2) intensity = 'level-2';
-          if (count > 4) intensity = 'level-3';
-          
+          let level = '0';
+          if (count >= 1) level = '1';
+          if (count >= 3) level = '2';
+          if (count >= 5) level = '3';
+
           return (
             <div 
               key={date} 
-              className={`heatmap-cell ${intensity}`} 
-              title={`${date}: ${count} habits done`}
+              className={`heatmap-cell level-${level}`} 
+              title={`${date}: ${count} habits conquered`}
             />
           );
         })}
+      </div>
+      <div className="heatmap-legend">
+        <span>LESS</span>
+        <div className="heatmap-cell level-0"></div>
+        <div className="heatmap-cell level-1"></div>
+        <div className="heatmap-cell level-2"></div>
+        <div className="heatmap-cell level-3"></div>
+        <span>MORE</span>
       </div>
     </div>
   );
 };
 
 export default Heatmap;
-  
