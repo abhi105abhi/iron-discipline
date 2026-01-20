@@ -1,23 +1,15 @@
-const STORAGE_KEY = "ironData";
+import { db } from '../firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
-export function initData() {
-  let raw = localStorage.getItem(STORAGE_KEY);
-  let data;
-  if (!raw) {
-    data = {
-      habits: [],
-      startDate: new Date().toISOString(),
-      lifetimeAccess: false
-    };
-  } else {
-    data = JSON.parse(raw);
-    if (!data.startDate) data.startDate = new Date().toISOString();
-    if (data.lifetimeAccess === undefined) data.lifetimeAccess = false;
-  }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  return data;
-}
+// Local storage ki jagah Firebase se data fetch karne ka helper
+export const getUserData = async (userId) => {
+  const userRef = doc(db, "users", userId);
+  const snap = await getDoc(userRef);
+  return snap.exists() ? snap.data() : null;
+};
 
-export function saveData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
+// Premium status check karne ke liye helper
+export const checkPremiumStatus = async (userId) => {
+  const data = await getUserData(userId);
+  return data?.isPremium || false;
+};
