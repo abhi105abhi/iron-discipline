@@ -1,34 +1,32 @@
 import { db } from '../firebase';
-import { doc, updateDoc, arrayUnion, getDoc, setDoc } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 
-// Habit add karne ke liye
 export const addHabit = async (userId, habitName, targetDays) => {
   const userRef = doc(db, "users", userId);
   const newHabit = {
-    id: Date.now(),
-    name: habitName,
+    id: Date.now().toString(),
+    name: habitName.toUpperCase(),
     targetDays: parseInt(targetDays),
     completedDays: [],
     createdAt: new Date().toISOString(),
-    status: 'ACTIVE'
+    isArchived: false
   };
   await updateDoc(userRef, {
     habits: arrayUnion(newHabit)
   });
 };
 
-// Habit complete karne ka logic
 export const toggleHabitDay = async (userId, habitId, date) => {
   const userRef = doc(db, "users", userId);
   const snap = await getDoc(userRef);
   if (snap.exists()) {
-    const habits = snap.data().habits;
+    const habits = snap.data().habits || [];
     const updatedHabits = habits.map(h => {
       if (h.id === habitId) {
-        const hasDate = h.completedDays.includes(date);
+        const isAlreadyDone = h.completedDays.includes(date);
         return {
           ...h,
-          completedDays: hasDate 
+          completedDays: isAlreadyDone 
             ? h.completedDays.filter(d => d !== date) 
             : [...h.completedDays, date]
         };
@@ -38,3 +36,4 @@ export const toggleHabitDay = async (userId, habitId, date) => {
     await updateDoc(userRef, { habits: updatedHabits });
   }
 };
+
