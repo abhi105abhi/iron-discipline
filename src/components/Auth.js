@@ -13,12 +13,13 @@ const Auth = () => {
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
-        // Naya user hai, trial start date set karo
+        // Naya warrior register ho raha hai
         await setDoc(userRef, {
           name: user.displayName,
           email: user.email,
           createdAt: Date.now(),
-          isPremium: false
+          isPremium: false,
+          habits: []
         });
       }
     } catch (err) {
@@ -30,9 +31,12 @@ const Auth = () => {
     <div className="auth-container">
       <h1 className="brand-logo">SUDHAR JA</h1>
       <p className="tagline">No Excuses. Forge Your Will.</p>
-      <button className="login-btn" onClick={signIn}>
-        ENTER THE FORGE (Google Login)
+      <button className="btn-primary" onClick={signIn}>
+        ENTER THE FORGE (GOOGLE LOGIN)
       </button>
+      <p className="footer-note" style={{marginTop: '20px', opacity: 0.5}}>
+        Only for those with an Iron Will.
+      </p>
     </div>
   );
 };
