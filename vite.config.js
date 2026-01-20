@@ -7,27 +7,16 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'] // Fixes the glob warning
+      },
       manifest: {
-        name: 'SUDHAR JA',
+        name: 'Sudhar Ja - Iron Discipline',
         short_name: 'SudharJa',
-        description: 'Forge Your Will with Iron Discipline.',
-        theme_color: '#0a0a0a',
-        background_color: '#0a0a0a',
-        display: 'standalone',
-        icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
+        description: 'Forge Your Will.',
+        theme_color: '#050505',
+        background_color: '#050505',
+        display: 'standalone'
       }
     })
   ]
