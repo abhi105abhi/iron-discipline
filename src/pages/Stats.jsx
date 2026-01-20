@@ -1,52 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
+import React from 'react';
 import Heatmap from '../components/Heatmap';
-import WeeklyReport from '../components/WeeklyReport';
 
-const Stats = ({ user }) => {
-  const [habits, setHabits] = useState([]);
-
-  useEffect(() => {
-    const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
-      setHabits(doc.data()?.habits || []);
-    });
-    return () => unsub();
-  }, [user.uid]);
-
-  // Discipline Score Logic (Consistency % + Total Streaks)
-  const calculateScore = () => {
-    if (habits.length === 0) return 0;
-    const totalPossible = habits.reduce((acc, h) => acc + h.targetDays, 0);
-    const totalDone = habits.reduce((acc, h) => acc + h.completedDays.length, 0);
-    return Math.round((totalDone / totalPossible) * 100) || 0;
-  };
-
-  const score = calculateScore();
+const Stats = ({ user, habits, onBack }) => {
+  const totalHabits = habits?.length || 0;
+  const completedToday = habits?.filter(h => h.completedDays.includes(new Date().toDateString())).length || 0;
 
   return (
     <div className="stats-page">
-      <header className="stats-header">
-        <h1>BATTLE ANALYTICS</h1>
-        <div className="score-circle">
-          <span className="score-val">{score}</span>
-          <span className="score-label">DISCIPLINE SCORE</span>
-        </div>
-      </header>
+      <button className="back-btn" onClick={onBack}>← BACK TO FORGE</button>
+      <h1 className="stats-title">BATTLE STATS</h1>
 
       <div className="stats-grid">
-        <section className="stats-card">
-          <WeeklyReport habits={habits} />
-        </section>
-        
-        <section className="stats-card full-width">
-          <Heatmap habits={habits} />
-        </section>
+        <div className="stat-card">
+          <span className="stat-value">{totalHabits}</span>
+          <span className="stat-label">Active Missions</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-value">{completedToday}</span>
+          <span className="stat-label">Wins Today</span>
+        </div>
       </div>
 
-      <div className="rank-section">
-        <h3>YOUR STATUS: {score > 80 ? 'IRON LORD' : score > 50 ? 'WARRIOR' : 'RECRUIT'}</h3>
-        <p>Keep forging. Weakness is a choice.</p>
+      <div className="matrix-section">
+        <Heatmap habits={habits || []} />
+      </div>
+
+      <div className="pro-tip">
+        <h3>Warrior Status: {completedToday > 0 ? "ELITE" : "RECRUIT"}</h3>
+        <p>Your consistency matrix is your real resume.</p>
       </div>
     </div>
   );
