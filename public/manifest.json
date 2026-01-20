@@ -1,0 +1,33 @@
+{
+  "short_name": "IronWill",
+  "name": "IRON DISCIPLINE",
+  "description": "Forge your will. Break the cycle. No excuses.",
+  "icons": [
+    {
+      "src": "pwa-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#000000",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#CC0000",
+  "shortcuts": [
+    {
+      "name": "View Stats",
+      "short_name": "Stats",
+      "description": "Check your consistency matrix",
+      "url": "/stats",
+      "icons": [{ "src": "pwa-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
