@@ -1,93 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Inter:wght@400;900&display=swap');
+
 :root {
-  --bg-black: #050505;
-  --card-dark: #121212;
-  --blood-red: #cc0000;
-  --text-primary: #ffffff;
-  --text-secondary: #888888;
-  --iron-gray: #2a2a2a;
+  --bg-black: #000000;
+  --card-gray: #0a0a0a;
+  --blood-red: #ff0000;
+  --dark-red: #8b0000;
+  --text-white: #ffffff;
+  --iron: #222222;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
   background-color: var(--bg-black);
-  color: var(--text-primary);
-  font-family: 'Oswald', sans-serif;
-  margin: 0;
+  color: var(--text-white);
+  font-family: 'Inter', sans-serif;
   text-transform: uppercase;
+  overflow-x: hidden;
 }
 
-/* Dashboard Grid */
-.habit-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 15px;
-  padding: 20px;
+/* Landing & Auth Container */
+.auth-container, .dashboard-container, .stats-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background: radial-gradient(circle at top, #1a0000 0%, #000 100%);
 }
 
+.brand-logo {
+  font-family: 'Oswald', sans-serif;
+  font-size: 4rem;
+  letter-spacing: 10px;
+  color: var(--text-white);
+  text-shadow: 0 0 20px var(--blood-red);
+  margin-bottom: 10px;
+}
+
+.tagline {
+  color: var(--blood-red);
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+}
+
+/* Habit Entry Card */
+.habit-entry-card {
+  background: var(--card-gray);
+  border: 1px solid var(--iron);
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  margin-bottom: 40px;
+}
+
+input, select {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #000;
+  border: 1px solid var(--iron);
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
+}
+
+input:focus { border-color: var(--blood-red); outline: none; }
+
+.btn-primary {
+  width: 100%;
+  padding: 15px;
+  background: var(--blood-red);
+  color: white;
+  border: none;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.3s;
+  letter-spacing: 2px;
+}
+
+.btn-primary:hover {
+  background: var(--dark-red);
+  box-shadow: 0 0 20px var(--blood-red);
+}
+
+/* Habit Display Cards */
 .habit-card {
-  background: var(--card-dark);
-  padding: 20px;
+  background: linear-gradient(145deg, #0a0a0a, #111);
+  border-left: 5px solid var(--blood-red);
+  width: 100%;
+  max-width: 500px;
+  padding: 25px;
+  margin-bottom: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-left: 5px solid var(--blood-red);
-  box-shadow: 10px 10px 20px rgba(0,0,0,0.5);
 }
+
+.habit-info h3 { font-family: 'Oswald', sans-serif; font-size: 1.5rem; }
+.habit-info p { color: #888; font-size: 0.8rem; margin: 5px 0; }
 
 .done-btn {
   background: transparent;
   border: 1px solid var(--blood-red);
   color: white;
-  padding: 8px 15px;
+  padding: 10px 20px;
   cursor: pointer;
-  margin-top: 10px;
   font-weight: bold;
 }
 
-.done-btn.completed {
-  background: var(--blood-red);
-}
+.done-btn.completed { background: var(--blood-red); }
 
-/* Heatmap & Stats */
-.heatmap-container {
-  background: var(--card-dark);
-  padding: 20px;
-  border-radius: 4px;
-  margin: 20px;
-  overflow-x: auto;
-}
-
+/* Heatmap Grid */
 .heatmap-grid {
-  display: flex;
-  gap: 3px;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 5px;
+  background: #0a0a0a;
+  padding: 20px;
+  border: 1px solid var(--iron);
 }
 
 .heatmap-cell {
-  width: 12px;
-  height: 12px;
-  background: var(--iron-gray);
-  border-radius: 2px;
+  width: 15px;
+  height: 15px;
+  background: #1a1a1a;
 }
 
 .level-1 { background: #4d0000; }
 .level-2 { background: #990000; }
-.level-3 { background: #cc0000; box-shadow: 0 0 8px #cc0000; }
-
-/* Paywall */
-.paywall-container {
-  height: 100vh;
-  background: radial-gradient(circle, #220000 0%, #050505 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.price-tag {
-  font-size: 2rem;
-  margin: 20px 0;
-}
-
-.old-price { text-decoration: line-through; opacity: 0.5; margin-right: 10px; }
-.new-price { color: var(--blood-red); font-weight: 900; }
+.level-3 { background: #ff0000; box-shadow: 0 0 5px #ff0000; }
+  
