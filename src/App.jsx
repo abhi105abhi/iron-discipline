@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from './firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 import Auth from './components/Auth';
 import Dashboard from './pages/Dashboard';
 import Paywall from './components/Paywall';
@@ -12,19 +13,30 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         const userRef = doc(db, "users", currentUser.uid);
         const userSnap = await getDoc(userRef);
         
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          const signupDate = userData.createdAt;
-          const fifteenDaysInMs = 15 * 24 * 60 * 60 * 1000;
-          
-          if (!userData.isPremium && (Date.now() - signupDate > fifteenDaysInMs)) {
-            setIsExpired(true);
-          }
+        let userData;
+        if (!userSnap.exists()) {
+          // New User Setup
+          userData = {
+            name: currentUser.displayName,
+            email: currentUser.email,
+            createdAt: Date.now(),
+            isPremium: false
+          };
+          await setDoc(userRef, userData);
+        } else {
+          userData = userSnap.data();
+        }
+
+        // 15-Day Trial Logic
+        const signupDate = userData.createdAt;
+        const fifteenDaysInMs = 15 * 24 * 60 * 60 * 1000;
+        if (!userData.isPremium && (Date.now() - signupDate > fifteenDaysInMs)) {
+          setIsExpired(true);
         }
         setUser(currentUser);
       } else {
@@ -35,8 +47,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  if (loading) return <div className="loader">Forging...</div>;
-
+  if (loading) return <div className="loader">FORGING YOUR WILL...</div>;
   if (!user) return <Auth />;
   if (isExpired) return <Paywall />;
 
