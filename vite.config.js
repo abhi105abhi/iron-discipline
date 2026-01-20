@@ -33,17 +33,4 @@ export default defineConfig({
     })
   ]
 });
-    
-// vite.config.js
-VitePWA({
-  registerType: 'autoUpdate',
-  manifest: {
-    name: 'IRON DISCIPLINE',
-    short_name: 'IronWill',
-    display: 'standalone', // Yahi hai jo browser bar hataega
-    orientation: 'portrait',
-    background_color: '#000000',
-    theme_color: '#cc0000',
-    // ... baki icons wala part jo tune pehle dala tha
-  }
-})
+  
