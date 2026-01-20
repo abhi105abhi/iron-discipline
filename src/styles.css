@@ -1,3 +1,77 @@
+body {
+  margin: 0;
+  background: #0b0b0b;
+  color: #eaeaea;
+  font-family: system-ui, sans-serif;
+}
+
+.container {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+h1 {
+  letter-spacing: 2px;
+}
+
+.card, .habit, .stat-box {
+  background: #141414;
+  padding: 15px;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+
+input, select {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  background: #000;
+  color: white;
+  border: 1px solid #333;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: #1f7a1f;
+  border: none;
+  color: white;
+  font-weight: bold;
+}
+
+.habit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.active { color: orange }
+.completed { color: #1f7a1f }
+.failed { color: red }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.paywall {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid red;
+}
+
+.link {
+  display: block;
+  margin-top: 20px;
+  color: #1f7a1f;
+  text-align: center;
+}
 .center {
   display: flex;
   flex-direction: column;
