@@ -13,7 +13,6 @@ const Auth = () => {
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
-        // Naya warrior register ho raha hai
         await setDoc(userRef, {
           name: user.displayName,
           email: user.email,
@@ -35,7 +34,7 @@ const Auth = () => {
         ENTER THE FORGE (GOOGLE LOGIN)
       </button>
       <p className="footer-note" style={{marginTop: '20px', opacity: 0.5}}>
-        Only for those with an Iron Will.
+        "Discipline is the only way out."
       </p>
     </div>
   );
