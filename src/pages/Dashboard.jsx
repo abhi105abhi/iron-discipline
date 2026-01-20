@@ -1,132 +1,69 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { initData, saveData } from "../utils/storage";
-import ProgressRing from "../components/ProgressRing";
-import Paywall from "../components/Paywall";
+import React, { useState, useEffect } from 'react';
+import { db } from '../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { addHabit, toggleHabitDay } from '../utils/discipline';
+import ProgressRing from '../components/ProgressRing';
 
-const templates = [
-  { title: "Daily Gym", targetDays: 66 },
-  { title: "Cold Shower", targetDays: 30 },
-  { title: "No PMO", targetDays: 90 },
-  { title: "5 AM Wakeup", targetDays: 30 },
-  { title: "Meditation", targetDays: 21 },
-  { title: "Reading 30min", targetDays: 30 },
-  { title: "No Sugar", targetDays: 40 }
-];
-
-const quotes = [
-  "Stay hard! — David Goggins",
-  "Who's gonna carry the boats?",
-  "Discipline is choosing between what you want now and what you want most.",
-  "No excuses. Only iron will.",
-  "Pain is weakness leaving the body.",
-  "Suffer the pain of discipline or suffer the pain of regret."
-];
-
-function getCurrentStreak(completedDays) {
-  if (completedDays.length === 0) return 0;
-  const set = new Set(completedDays);
-  let streak = 0;
-  let date = new Date();
-  while (true) {
-    const str = date.toISOString().slice(0, 10);
-    if (set.has(str)) {
-      streak++;
-      date.setDate(date.getDate() - 1);
-    } else break;
-  }
-  return streak;
-}
-
-export default function Dashboard() {
-  const [data, setData] = useState(null);
-  const [isExpired, setIsExpired] = useState(false);
-  const [title, setTitle] = useState("");
-  const [target, setTarget] = useState(30);
-  const quote = quotes[Math.floor(Math.random() * quotes.length)];
+const Dashboard = ({ user }) => {
+  const [habits, setHabits] = useState([]);
+  const [newHabit, setNewHabit] = useState('');
+  const [target, setTarget] = useState(21);
 
   useEffect(() => {
-    const loaded = initData();
-    const daysSinceStart = Math.floor((new Date() - new Date(loaded.startDate)) / 86400000);
-    if (daysSinceStart > 15 && !loaded.lifetimeAccess) {
-      setIsExpired(true);
-    }
-    setData(loaded);
-  }, []);
-
-  if (!data) return null;
-  if (isExpired) return <Paywall />;
-
-  const addHabit = () => {
-    if (!title) return;
-    const newHabit = {
-      id: Date.now(),
-      title,
-      targetDays: Number(target),
-      completedDays: [],
-      status: "active"
-    };
-    const updated = { ...data, habits: [...data.habits, newHabit] };
-    setData(updated);
-    saveData(updated);
-    setTitle("");
-    setTarget(30);
-  };
-
-  const markDone = (id) => {
-    const today = new Date().toISOString().slice(0, 10);
-    const habits = data.habits.map(h => {
-      if (h.id !== id || h.completedDays.includes(today)) return h;
-      const newDays = [...h.completedDays, today];
-      return { ...h, completedDays: newDays, status: newDays.length >= h.targetDays ? "completed" : "active" };
+    const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
+      setHabits(doc.data()?.habits || []);
     });
-    const updated = { ...data, habits };
-    setData(updated);
-    saveData(updated);
-  };
+    return () => unsub();
+  }, [user.uid]);
 
-  const handleTemplate = (e) => {
-    const tmpl = templates.find(t => t.title === e.target.value);
-    if (tmpl) {
-      setTitle(tmpl.title);
-      setTarget(tmpl.targetDays);
-    }
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!newHabit) return;
+    await addHabit(user.uid, newHabit, target);
+    setNewHabit('');
   };
 
   return (
-    <div className="container">
-      <h1>IRON DISCIPLINE</h1>
-      <p className="subtitle">No Excuses. Forge Your Will.</p>
-      <p className="quote">{quote}</p>
+    <div className="dashboard">
+      <header className="dashboard-header">
+        <h2>WARRIOR: {user.displayName}</h2>
+        <p>FORGE YOUR DESTINY. NO EXCUSES.</p>
+      </header>
 
-      <select onChange={handleTemplate} defaultValue="">
-        <option value="" disabled>Select Masculine Template</option>
-        {templates.map(t => <option key={t.title}>{t.title} ({t.targetDays} days)</option>)}
-      </select>
-      <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Or custom habit title" />
-      <input type="number" value={target} onChange={e => setTarget(e.target.value)} placeholder="Target days" />
-      <button onClick={addHabit}>Lock In Habit</button>
+      <form className="habit-form" onSubmit={handleAdd}>
+        <input 
+          type="text" 
+          placeholder="ENTER NEW HABIT..." 
+          value={newHabit}
+          onChange={(e) => setNewHabit(e.target.value)}
+        />
+        <select value={target} onChange={(e) => setTarget(e.target.value)}>
+          <option value="21">21 DAYS (Basic)</option>
+          <option value="75">75 DAYS (Hardcore)</option>
+          <option value="90">90 DAYS (Iron Will)</option>
+        </select>
+        <button type="submit" className="btn-primary">LOCK IT IN</button>
+      </form>
 
-      {data.habits.map(h => {
-        const progress = Math.min(100, (h.completedDays.length / h.targetDays) * 100);
-        const streak = getCurrentStreak(h.completedDays);
-        return (
-          <div key={h.id} className="habit-item">
-            <h3>{h.title}</h3>
-            <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-              <ProgressRing value={progress} size={80} />
-              <div>
-                <p>{h.completedDays.length} / {h.targetDays} days</p>
-                {streak > 0 && <p>🔥 Current streak: {streak} days</p>}
-                <p>Status: {h.status.toUpperCase()}</p>
-              </div>
+      <div className="habit-grid">
+        {habits.map(habit => (
+          <div key={habit.id} className="habit-card">
+            <div className="card-info">
+              <h3>{habit.name}</h3>
+              <p>{habit.completedDays.length} / {habit.targetDays} DAYS DONE</p>
+              <button 
+                className="done-btn" 
+                onClick={() => toggleHabitDay(user.uid, habit.id, new Date().toDateString())}
+              >
+                {habit.completedDays.includes(new Date().toDateString()) ? 'COMPLETED' : 'MARK DONE'}
+              </button>
             </div>
-            {h.status === "active" && <button onClick={() => markDone(h.id)}>Mark Done Today</button>}
+            <ProgressRing radius={50} stroke={6} progress={habit.completedDays.length} target={habit.targetDays} />
           </div>
-        );
-      })}
-
-      <Link to="/stats" className="back-link">View Full Discipline Report →</Link>
+        ))}
+      </div>
     </div>
   );
-}
+};
+
+export default Dashboard;
