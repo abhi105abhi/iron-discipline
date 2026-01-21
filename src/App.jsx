@@ -1,42 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { auth } from './firebase';
+import React, { useState } from 'react';
+import { useStore } from './store/useStore';
+import { useAuth } from './hooks/useAuth';
 import Auth from './components/Auth';
 import Dashboard from './pages/Dashboard';
 import Stats from './pages/Stats';
 import BottomNav from './components/BottomNav';
 import Paywall from './components/Paywall';
+import './styles.css';
 
 function App() {
-  const [user, setUser] = useState(null);
+  const { user, loading, isPremium } = useStore();
   const [view, setView] = useState('forge');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((u) => {
-      setUser(u);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+  
+  // Auth and Profile Sync
+  useAuth();
 
   if (loading) return <div className="loader">FORGING...</div>;
   if (!user) return <Auth />;
 
   return (
-    <>
+    <div className="app-shell">
       <div className="view-container">
-        {view === 'forge' && <Dashboard user={user} />}
-        {view === 'stats' && <Stats user={user} />}
+        {view === 'forge' && <Dashboard />}
+        {view === 'stats' && <Stats />}
         {view === 'profile' && (
           <div className="profile-view">
             <h1 className="brand-logo">WARRIOR</h1>
-            <p>{user.displayName}</p>
-            <button onClick={() => auth.signOut()} className="btn-primary">ABANDON MISSIONS (LOGOUT)</button>
+            <div className="profile-card">
+              <p>EMAIL: {user.email}</p>
+              <p>STATUS: <span className={isPremium ? 'gold' : 'red'}>
+                {isPremium ? 'PREMIUM ACCESS' : 'TRIAL MODE'}
+              </span></p>
+            </div>
+            <button onClick={() => window.location.reload()} className="btn-primary">SYNC DATA</button>
           </div>
         )}
       </div>
       <BottomNav currentView={view} setView={setView} />
-    </>
+    </div>
   );
 }
 
